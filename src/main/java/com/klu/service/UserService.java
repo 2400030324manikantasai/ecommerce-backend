@@ -5,12 +5,32 @@ import com.klu.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public User login(String email, String password) {
-    User user = userRepository.findByEmail(email);
+public class UserService {
 
-    if (user != null && user.getPassword().equals(password)) {
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    // ✅ Signup
+    public User registerUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // ✅ Login (FIXED)
+    public User login(String email, String password) {
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid password");
+        }
+
         return user;
-    } else {
-        throw new RuntimeException("Invalid credentials");
     }
 }
