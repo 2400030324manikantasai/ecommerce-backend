@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
-//@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final UserService userService;
@@ -16,15 +15,18 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // Signup
+    // ✅ Signup
     @PostMapping("/signup")
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // Login
+    // ✅ Login
     @PostMapping("/login")
     public User login(@RequestBody User user) {
-        return userService.login(user.getEmail(), user.getPassword());
+        return userService.login(
+                user.getEmail().trim(),      // ✅ trim fix
+                user.getPassword().trim()
+        );
     }
 }
